@@ -5,11 +5,13 @@ import java.util.List;
 import com.example.weatherguy.model.City;
 import com.example.weatherguy.model.Province;
 import com.example.weatherguy.model.County;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabaseCorruptException;
+import android.util.Log;
 
 public class WeatherGuyDB {
 	// Êý¾Ý¿âÃû³Æ
@@ -65,14 +67,18 @@ public class WeatherGuyDB {
 			ContentValues values = new ContentValues();
 			values.put("city_name", city.getCityName());
 			values.put("city_code", city.getCityCode());
+			values.put("province_id", city.getProvinceId());
 			db.insert("City", null, values);
+			Log.d("1025", "saveCity>>"+city.getCityName()+city.getCityCode()+"="+city.getProvinceId());
 			
 		}
 	}
 	public List<City> loadCities(int provinceId) { 
 	    List<City> list = new ArrayList<City>(); 
+	    
 	    Cursor cursor = db.query("City", null, "province_id = ?", 
 	        new String[] { String.valueOf(provinceId) }, null, null, null); 
+	    Log.d("1025", "cursor.moveToFirst()>>" + String.valueOf(cursor.moveToFirst()));
 	    if (cursor.moveToFirst()) { 
 	      do { 
 	        City city = new City(); 
@@ -82,7 +88,8 @@ public class WeatherGuyDB {
 	        city.setCityCode(cursor.getString(cursor 
 	            .getColumnIndex("city_code"))); 
 	        city.setProvinceId(provinceId); 
-	        list.add(city); 
+	        list.add(city);
+	        Log.d("1025", "add city>>" + city);
 	      } while (cursor.moveToNext()); 
 	    }    
 	    return list; 
